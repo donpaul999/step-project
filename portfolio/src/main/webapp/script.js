@@ -33,3 +33,7 @@ async function getRandomNameUsingAsync() {
  console.log('Adding name to dom: ' + name);
   document.getElementsByTagName('body').innerText = name; 
 }
+
+$('.carousel').carousel({
+    interval:3000
+})
