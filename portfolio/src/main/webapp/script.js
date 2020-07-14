@@ -37,21 +37,18 @@ async function getRandomNameUsingAsync() {
 */
 
 $('.carousel').carousel({
-    interval:5000
+    interval:60000
 })
 
 function getMessagesFromServer() {
   fetch('/data').then(response => response.json()).then((messages) => {
     const messagesListElement = document.getElementById('messages-container');
-    messagesListElement.innerHTML = '';
-    messagesListElement.appendChild(
-        createListElement(messages[0]));
-    messagesListElement.appendChild(
-        createListElement(messages[1]));
-    messagesListElement.appendChild(
-        createListElement(messages[2]));
-    messagesListElement.appendChild(
-        createListElement(messages[3]));
+    if(messagesListElement.innerHTML !== ''){
+        messagesListElement.innerHTML = '';
+    }
+    for(i = 0; i < messages.length; ++i){
+        messagesListElement.appendChild(createListElement(messages[i]));
+    }
     console.log(messages);
   });
 }
@@ -60,5 +57,6 @@ function getMessagesFromServer() {
 function createListElement(text) {
   const liElement = document.createElement('li');
   liElement.innerText = text;
+  liElement.classList.add('list-group-item');
   return liElement;
 }

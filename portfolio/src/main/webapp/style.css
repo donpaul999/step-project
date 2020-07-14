@@ -56,6 +56,12 @@ label {
     height: auto;
 }
 
+#messages-container li{
+    color:#111;
+}
+
+
+
 /*
  * -- LAYOUT STYLES --
  * These are some useful classes which I will need
