@@ -42,9 +42,13 @@ $('.carousel').carousel({
 
 function getMessagesFromServer() {
   var numberOfComments = document.getElementById("messages-number").value;
-  var url = '/data' + numberOfComments;
+  if(numberOfComments == null){
+      numberOfComments = 0;
+  }
+  
+  var url = '/data?nr=' + numberOfComments;
+  console.log(numberOfComments);
   fetch(url).then(response => response.json()).then((messages) => {
-    console.log(messages);
     const messagesListElement = document.getElementById('messages-container');
     if(messagesListElement.innerHTML !== ''){
         messagesListElement.innerHTML = '';
