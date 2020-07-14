@@ -37,7 +37,6 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    
     String stringNumberOfMessages = request.getParameter("nr");
     int numberOfMessages = Integer.parseInt(stringNumberOfMessages);
     
