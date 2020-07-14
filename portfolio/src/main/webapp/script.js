@@ -42,6 +42,7 @@ $('.carousel').carousel({
 
 function getMessagesFromServer() {
   fetch('/data').then(response => response.json()).then((messages) => {
+    console.log(messages);
     const messagesListElement = document.getElementById('messages-container');
     if(messagesListElement.innerHTML !== ''){
         messagesListElement.innerHTML = '';
@@ -49,7 +50,6 @@ function getMessagesFromServer() {
     for(i = 0; i < messages.length; ++i){
         messagesListElement.appendChild(createListElement(messages[i]));
     }
-    console.log(messages);
   });
 }
 

@@ -16,6 +16,9 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.lang.Math; 
@@ -30,15 +33,20 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private ArrayList<String> messages;
-
-  @Override
-  public void init(){
-    messages = new ArrayList<String>();
-  }  
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    Query query = new Query("Message").addSort("timestamp", SortDirection.DESCENDING);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+
+    ArrayList<String> messages = new ArrayList<>();
+    for (Entity entity : results.asIterable()) {
+      String newMessage = (String) entity.getProperty("content");
+      messages.add(newMessage);
+    }
+
     String json = convertToJsonUsingGson(messages);
     response.setContentType("application/json;");
     response.getWriter().println(json);
@@ -49,7 +57,7 @@ public class DataServlet extends HttpServlet {
     if(newMessage != ""){
         long timestamp = System.currentTimeMillis();
         Entity messageEntity = new Entity("Message");
-        messageEntity.setProperty("messageDescription", newMessage);
+        messageEntity.setProperty("content", newMessage);
         messageEntity.setProperty("timestamp", timestamp);
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         datastore.put(messageEntity);
