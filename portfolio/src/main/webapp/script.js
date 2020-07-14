@@ -27,13 +27,38 @@ function addRandomGreeting() {
   greetingContainer.innerText = greeting;
 }
 
+/*
 async function getRandomNameUsingAsync() {
   const response = await fetch('/data');
   const name = await response.text();
  console.log('Adding name to dom: ' + name);
   document.getElementsByTagName('body').innerText = name; 
 }
+*/
 
 $('.carousel').carousel({
-    interval:3000
+    interval:5000
 })
+
+function getMessagesFromServer() {
+  fetch('/data').then(response => response.json()).then((messages) => {
+    const messagesListElement = document.getElementById('messages-container');
+    messagesListElement.innerHTML = '';
+    messagesListElement.appendChild(
+        createListElement(messages[0]));
+    messagesListElement.appendChild(
+        createListElement(messages[1]));
+    messagesListElement.appendChild(
+        createListElement(messages[2]));
+    messagesListElement.appendChild(
+        createListElement(messages[3]));
+    console.log(messages);
+  });
+}
+
+
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
+}
