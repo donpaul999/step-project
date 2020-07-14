@@ -34,17 +34,21 @@ import com.google.appengine.api.datastore.FetchOptions;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    
     String stringNumberOfMessages = request.getParameter("nr");
     int numberOfMessages = Integer.parseInt(stringNumberOfMessages);
     
+    if(numberOfMessages == 0){
+        numberOfMessages = 100;
+    }
+
     Query query = new Query("Message").addSort("timestamp", SortDirection.DESCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery preparedQuery = datastore.prepare(query);
     List<Entity> results = preparedQuery.asList(FetchOptions.Builder.withLimit(numberOfMessages));
-    
+
     ArrayList<String> messages = new ArrayList<>();
     for (Entity entity : results) {
       String newMessage = (String) entity.getProperty("content");
@@ -55,6 +59,7 @@ public class DataServlet extends HttpServlet {
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
+  
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String newMessage = getParameter(request, "text-input", "");

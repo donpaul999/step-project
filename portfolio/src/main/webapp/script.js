@@ -14,7 +14,7 @@
 
 /**
  * Adds a random greeting to the page.
- */
+
 function addRandomGreeting() {
   const greetings =
       ['Buna ziua!', 'Neata!', 'Buna seara！'];
@@ -27,18 +27,14 @@ function addRandomGreeting() {
   greetingContainer.innerText = greeting;
 }
 
-/*
+
 async function getRandomNameUsingAsync() {
   const response = await fetch('/data');
   const name = await response.text();
- console.log('Adding name to dom: ' + name);
   document.getElementsByTagName('body').innerText = name; 
 }
 */
 
-$('.carousel').carousel({
-    interval:60000
-})
 
 function getMessagesFromServer() {
   var numberOfComments = document.getElementById("messages-number").value;
@@ -49,6 +45,7 @@ function getMessagesFromServer() {
   var url = '/data?nr=' + numberOfComments;
   console.log(numberOfComments);
   fetch(url).then(response => response.json()).then((messages) => {
+    console.log(messages);
     const messagesListElement = document.getElementById('messages-container');
     if(messagesListElement.innerHTML !== ''){
         messagesListElement.innerHTML = '';
@@ -65,4 +62,47 @@ function createListElement(text) {
   liElement.innerText = text;
   liElement.classList.add('list-group-item');
   return liElement;
+}
+
+function showAbout() {
+  var elem1 = document.getElementById("about");
+  var elem2 = document.getElementById("skills");
+  var elem3 = document.getElementById("contact");
+
+  if (elem1.style.display === "none") {
+    elem1.style.display = "block";
+    elem2.style.display = "none";
+    elem3.style.display = "none";
+  } else {
+    elem1.style.display = "none";
+  }
+}
+
+function showSkills() {
+  var elem1 = document.getElementById("skills");
+  var elem2 = document.getElementById("about");
+  var elem3 = document.getElementById("contact");
+
+  if (elem1.style.display === "none") {
+    elem1.style.display = "block";
+    elem2.style.display = "none";
+    elem3.style.display = "none";
+  } else {
+    elem1.style.display = "none";
+  }
+}
+
+function showContact() {
+  var elem1 = document.getElementById("contact");
+  var elem2 = document.getElementById("skills");
+  var elem3 = document.getElementById("about");
+
+  if (elem1.style.display === "none") {
+    elem1.style.display = "block";
+    elem2.style.display = "none";
+    elem3.style.display = "none";
+  } else {
+    elem1.style.display = "none";
+  }
+
 }
