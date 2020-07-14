@@ -24,6 +24,8 @@
       <div class="carousel-caption">
         <h5 class="alert alert-light">Hi, I'm Paul and this is my portfolio. 😄</h5>
         <div class="col-md-4 text-center"> 
+            <label for="commessages ments-number">Number of messages</label>
+            <input type="number" id="messages-number" name="messages-number" min="1" max="100">
             <button onclick="getMessagesFromServer()" class="btn btn-primary">Get Messages</button>
             <ul class="list-group" id="messages-container"></ul>
         </div>

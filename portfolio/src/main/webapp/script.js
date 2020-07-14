@@ -41,7 +41,9 @@ $('.carousel').carousel({
 })
 
 function getMessagesFromServer() {
-  fetch('/data').then(response => response.json()).then((messages) => {
+  var numberOfComments = document.getElementById("messages-number").value;
+  var url = '/data' + numberOfComments;
+  fetch(url).then(response => response.json()).then((messages) => {
     console.log(messages);
     const messagesListElement = document.getElementById('messages-container');
     if(messagesListElement.innerHTML !== ''){
