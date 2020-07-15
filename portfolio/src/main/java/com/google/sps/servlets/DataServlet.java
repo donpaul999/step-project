@@ -40,6 +40,10 @@ public class DataServlet extends HttpServlet {
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
+  
+  /**
+  * Gets message from POST Request and saves it in the messages list
+  */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String newMessage = getParameter(request, "text-input", "");
