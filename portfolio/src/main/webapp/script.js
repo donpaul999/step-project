@@ -43,15 +43,22 @@ function getMessagesFromServer() {
   }
   
   var url = '/data?nr=' + numberOfComments;
-  console.log(numberOfComments);
   fetch(url).then(response => response.json()).then((messages) => {
-    console.log(messages);
     const messagesListElement = document.getElementById('messages-container');
     if(messagesListElement.innerHTML !== ''){
         messagesListElement.innerHTML = '';
     }
+
     for(i = 0; i < messages.length; ++i){
-        messagesListElement.appendChild(createListElement(messages[i]));
+        childToAppend = createListElement(messages[i].propertyMap.content);
+        childToAppend.appendChild(createButton(messages[i].propertyMap.messageId));
+        messagesListElement.appendChild(childToAppend);
+    }
+    
+    if(messages.length === 0){
+        var content = "No messages available!";
+        childToAppend = createListElement(content);
+        messagesListElement.appendChild(childToAppend);
     }
   });
 }
@@ -62,6 +69,30 @@ function createListElement(text) {
   liElement.innerText = text;
   liElement.classList.add('list-group-item');
   return liElement;
+}
+
+function createButton(messageId) {
+  const buttonElement = document.createElement('button');
+  buttonElement.classList.add('delete-button');
+  buttonElement.textContent = "Delete";
+  buttonElement.id = messageId;
+  buttonElement.setAttribute( "onClick", "javascript: deleteMessage(this);" );
+  return buttonElement;
+}
+
+
+function deleteMessage(thisButton) {
+  const params = new URLSearchParams();
+  var messageId = thisButton.id;
+  var liElementToDelete = thisButton.parentNode;
+  params.append('messageId', messageId);
+  deleteLi(liElementToDelete);
+  fetch('/delete-data', {method: 'POST', body: params});
+}
+
+function deleteLi(liToDelete) {
+  var listWhereToRemove = liToDelete.parentNode;
+  listWhereToRemove.removeChild(liToDelete);
 }
 
 function showAbout() {

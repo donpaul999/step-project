@@ -49,9 +49,13 @@ public class DataServlet extends HttpServlet {
     PreparedQuery preparedQuery = datastore.prepare(query);
     List<Entity> results = preparedQuery.asList(FetchOptions.Builder.withLimit(numberOfMessages));
 
-    ArrayList<String> messages = new ArrayList<>();
+    ArrayList<Entity> messages = new ArrayList<>();
     for (Entity entity : results) {
-      String newMessage = (String) entity.getProperty("content");
+      String messageText = (String) entity.getProperty("content");
+      long messageId = entity.getKey().getId();
+      Entity newMessage = new Entity("Message");
+      newMessage.setProperty("content", messageText);
+      newMessage.setProperty("messageId", messageId);
       messages.add(newMessage);
     }
 
@@ -75,7 +79,7 @@ public class DataServlet extends HttpServlet {
     response.sendRedirect("/index.html");
   }
 
-  private String convertToJsonUsingGson(ArrayList<String> messages) {
+  private String convertToJsonUsingGson(ArrayList<Entity> messages) {
     Gson gson = new Gson();
     String json = gson.toJson(messages);
     return json;

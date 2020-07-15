@@ -67,6 +67,12 @@ button, input[type='submit'] {
     transition: all 0.2s ease-in-out;
 }
 
+.delete-button{
+    margin-left: 30px;
+    padding: 3px 3px;
+    font-size: 1em;
+}
+
 .list-group-item{
     color:black;
 }
@@ -96,5 +102,6 @@ input{
     padding: 50px; 
     margin-top: 0;
     margin: 0px 50px 50px 50px;
-    background: #908879;  
+    background: #b4a68d;  
 }
+
