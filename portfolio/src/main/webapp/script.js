@@ -13,7 +13,7 @@
 // limitations under the License.
 
 
- /** Adds a random greeting to the page.
+ /* Adds a random greeting to the page.
 
 function addRandomGreeting() {
   const greetings =
@@ -135,5 +135,4 @@ function showContact() {
   } else {
     elem1.style.display = "none";
   }
-
 }
