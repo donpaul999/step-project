@@ -14,7 +14,7 @@
 
 function getMessagesFromServer() {
   var numberOfComments = document.getElementById("messages-number").value;
-  if(numberOfComments == null){
+  if(numberOfComments === null){
       numberOfComments = 0;
   }
   
