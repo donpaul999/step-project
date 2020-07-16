@@ -66,8 +66,8 @@ function createDOMButton(messageId) {
   return domButtonElement;
 }
 
-async function handleDeleteCommentClick(this){
-   deleteComment(this);
+async function handleDeleteCommentClick(thisButton){
+   deleteComment(thisButton);
    const messages = await getCommentsFromServer();
    renderComments(messages);
 }
