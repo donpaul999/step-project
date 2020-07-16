@@ -8,9 +8,9 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>Personal portfolio - Paul Colta!</title>
   </head>
-  <body onload="getRandomNameUsingAsync()">
+  <body>
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
   <ol class="carousel-indicators">
     <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -22,6 +22,10 @@
       <img class="d-block w-100" src="img/picture_of_me.jpg" alt="First slide">
       <div class="carousel-caption d-none d-md-block">
         <h5 class="alert alert-light">Hi, I'm Paul and this is my portfolio. 😄</h5>
+        <div class="col-md-4 text-center"> 
+            <button onclick="getMessagesFromServer()">Get messages!</button>
+            <ul id="messages-container"></ul>
+        </div>
       </div>
     </div>
     <div class="carousel-item">
