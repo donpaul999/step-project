@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 public class DataServlet extends HttpServlet {
 
   /**
-  * Loads messages from database and transform them into a JSON object
+  * Loads messages from database and transforms them into a JSON object
   */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
