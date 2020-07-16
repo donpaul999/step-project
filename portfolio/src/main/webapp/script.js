@@ -27,14 +27,6 @@ function addRandomGreeting() {
   greetingContainer.innerText = greeting;
 }
 
-/*
-async function getRandomNameUsingAsync() {
-  const response = await fetch('/data');
-  const name = await response.text();
- console.log('Adding name to dom: ' + name);
-  document.getElementsByTagName('body').innerText = name; 
-}
-*/
 
 $('.carousel').carousel({
     interval:60000
@@ -52,7 +44,6 @@ function getMessagesFromServer() {
     console.log(messages);
   });
 }
-
 
 function createListElement(text) {
   const liElement = document.createElement('li');
