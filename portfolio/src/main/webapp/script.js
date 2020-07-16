@@ -12,30 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random greeting to the page.
- */
-function addRandomGreeting() {
-  const greetings =
-      ['Buna ziua!', 'Neata!', 'Buna seara！'];
-
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
-}
-
-/*
-async function getRandomNameUsingAsync() {
-  const response = await fetch('/data');
-  const name = await response.text();
- console.log('Adding name to dom: ' + name);
-  document.getElementsByTagName('body').innerText = name; 
-}
-*/
-
 $('.carousel').carousel({
     interval:60000
 })
@@ -44,7 +20,6 @@ function getMessagesFromServer() {
   var numberOfComments = document.getElementById("messages-number").value;
   var url = '/data' + numberOfComments;
   fetch(url).then(response => response.json()).then((messages) => {
-    console.log(messages);
     const messagesListElement = document.getElementById('messages-container');
     if(messagesListElement.innerHTML !== ''){
         messagesListElement.innerHTML = '';
