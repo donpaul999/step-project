@@ -35,7 +35,6 @@ function getMessagesFromServer() {
   });
 }
 
-
 function createListElement(text) {
   const liElement = document.createElement('li');
   liElement.innerText = text;
