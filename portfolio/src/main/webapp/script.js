@@ -45,6 +45,7 @@ function showSection(idToShow) {
   var elem2 = document.getElementById("skills");
   var elem3 = document.getElementById("contact");
   var elem4 = document.getElementById(idToShow);
+  
   var statusOfElem4 = elem4.style.display;
   elem1.style.display = "none";
   elem2.style.display = "none";
