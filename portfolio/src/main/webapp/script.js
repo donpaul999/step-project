@@ -13,29 +13,6 @@
 // limitations under the License.
 
 
- /* Adds a random greeting to the page.
-
-function addRandomGreeting() {
-  const greetings =
-      ['Buna ziua!', 'Neata!', 'Buna seara！'];
-
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
-}
-
-
-async function getRandomNameUsingAsync() {
-  const response = await fetch('/data');
-  const name = await response.text();
-  document.getElementsByTagName('body').innerText = name; 
-}
-*/
-
-
 function getMessagesFromServer() {
   var numberOfComments = document.getElementById("messages-number").value;
   if(numberOfComments == null){
@@ -62,7 +39,6 @@ function getMessagesFromServer() {
     }
   });
 }
-
 
 function createListElement(text) {
   const liElement = document.createElement('li');
@@ -95,44 +71,32 @@ function deleteLi(liToDelete) {
   listWhereToRemove.removeChild(liToDelete);
 }
 
-function showAbout() {
+function showSection(idToShow) {
   var elem1 = document.getElementById("about");
   var elem2 = document.getElementById("skills");
   var elem3 = document.getElementById("contact");
-
-  if (elem1.style.display === "none") {
-    elem1.style.display = "block";
-    elem2.style.display = "none";
-    elem3.style.display = "none";
-  } else {
-    elem1.style.display = "none";
-  }
+  var elem4 = document.getElementById(idToShow);
+  var statusOfElem4 = elem4.style.display;
+  elem1.style.display = "none";
+  elem2.style.display = "none";
+  elem3.style.display = "none";
+  if (statusOfElem4 === "none") {
+    elem4.style.display = "block";
+  } 
 }
 
-function showSkills() {
-  var elem1 = document.getElementById("skills");
-  var elem2 = document.getElementById("about");
-  var elem3 = document.getElementById("contact");
-
-  if (elem1.style.display === "none") {
-    elem1.style.display = "block";
-    elem2.style.display = "none";
-    elem3.style.display = "none";
-  } else {
-    elem1.style.display = "none";
-  }
-}
-
-function showContact() {
-  var elem1 = document.getElementById("contact");
-  var elem2 = document.getElementById("skills");
-  var elem3 = document.getElementById("about");
-
-  if (elem1.style.display === "none") {
-    elem1.style.display = "block";
-    elem2.style.display = "none";
-    elem3.style.display = "none";
-  } else {
-    elem1.style.display = "none";
-  }
+function testLogIn(){
+  const params = new URLSearchParams();
+  fetch('/home').then(response => response.json()).then((userStatus) => {
+      console.log(userStatus);
+      if(userStatus.propertyMap.email){
+        document.getElementById("log-out").style.display = "block";
+        document.getElementById("email-text").innerText = "Hi, " + userStatus.propertyMap.email + "!";
+        document.getElementById("log-out-link").href = userStatus.propertyMap.link;
+      }
+      else{
+        document.getElementById("log-in").style.display = "block";
+        document.getElementById("log-in-link").href = userStatus.propertyMap.link;
+      }
+  });
 }

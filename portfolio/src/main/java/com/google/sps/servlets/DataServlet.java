@@ -34,12 +34,12 @@ import com.google.appengine.api.datastore.FetchOptions;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
+  /**
+  * Loads messages from database and transform them into a JSON object
+  */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    
-    String stringNumberOfMessages = request.getParameter("nr");
-    int numberOfMessages = Integer.parseInt(stringNumberOfMessages);
-    
+    int numberOfMessages = Integer.parseInt(request.getParameter("nr"));
     if(numberOfMessages == 0){
         numberOfMessages = 100;
     }
@@ -64,6 +64,9 @@ public class DataServlet extends HttpServlet {
     response.getWriter().println(json);
   }
   
+  /**
+  * Gets message from user and saves it to the database
+  */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String newMessage = getParameter(request, "text-input", "");
