@@ -29,20 +29,31 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.FetchOptions;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 
-//Servlet that deletes comments
+
+//Servlet that translates comments
 
 @WebServlet("/translate")
 public class TranslateDataServlet extends HttpServlet {
   
+  /**
+  * Gets message from server and returns it translated
+  */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String json = request.getParameter("messages");
-    String language = request.getParameter("languageCode");
-    response.setContentType("application/json;");
-    Gson gson = new Gson();
-    String json2 = gson.toJson(json);
-    response.getWriter().println(json2);
+    String textToTranslate = request.getParameter("message");
+    String languageCode = request.getParameter("languageCode");
+
+    Translate translate = TranslateOptions.getDefaultInstance().getService();
+    Translation translation = translate.translate(textToTranslate, Translate.TranslateOption.targetLanguage(languageCode));
+    String translatedText = translation.getTranslatedText();
+
+    response.setContentType("text/html; charset=UTF-8");
+    response.setCharacterEncoding("UTF-8");
+    response.getWriter().println(translatedText);
 
   }
 }

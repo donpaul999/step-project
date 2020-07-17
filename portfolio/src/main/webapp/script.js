@@ -23,6 +23,7 @@ async function getCommentsFromServer() {
 }
 
 async function handleGetCommentsClick(){
+   renderLoadingListElement();
    const messages = await getCommentsFromServer();
    renderComments(messages);
 }
@@ -48,7 +49,7 @@ function renderComments(messages){
 
 function createDOMListElement(email, text) {
   const domListElement = document.createElement('li');
-  if(email != "")
+  if(email !== "")
    domListElement.innerText = email + ": ";
   domListElement.innerText += text;
   domListElement.classList.add('list-group-item');
@@ -110,17 +111,36 @@ function testLogIn(){
   });
 }
 
+function renderLoadingListElement(){
+    const resultContainer = document.getElementById('comments-container');
+    resultContainer.innerHTML = '';
+    var content = "Loading...";
+    var domListElement = createDOMListElement("", content);
+    resultContainer.appendChild(domListElement);
+}
+
+async function  handleTranslateComments(){
+    renderLoadingListElement();
+    var comments =  await translateComments();
+    console.log(comments);
+    renderComments(comments);
+}
+
 async function translateComments(){
+
     const languageCode = document.getElementById('languages-list').value;
-    const params = new URLSearchParams();
-    params.append('languageCode', languageCode);
-    params.append('messages', await getCommentsFromServer());
-    fetch('/translate', {
-        method: 'POST',
-        body: params
-    }).then(response => response.json())
-        .then((messages) => {
-          console.log(messages);
-          renderComments(messages);
-        }); 
+    var comments =  await getCommentsFromServer();
+    for(var i = 0; i < comments.length; ++i){
+        var params = new URLSearchParams();
+        params.append('message', comments[i].propertyMap.content);
+        params.append('languageCode', languageCode);
+        comments[i].propertyMap.content = await fetch('/translate', {
+          method: 'POST',
+          body: params
+        }).then(response => response.text())
+        .then((translatedMessage) => {
+          return translatedMessage;
+        });
+    }
+    return comments;
 }
