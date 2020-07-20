@@ -13,7 +13,7 @@
 // limitations under the License.
 async function getCommentsFromServer() {
   var numberOfComments = document.getElementById("comments-number").value;
-  if(numberOfComments == null){
+  if(!numberOfComments){
       numberOfComments = 0;
   }
   
@@ -29,7 +29,6 @@ async function handleGetCommentsClick(){
 }
 
 async function renderComments(messages){
-    console.log("2:" + messages);
     const messagesListElement = document.getElementById('comments-container');
     if(messagesListElement.innerHTML !== ''){
         messagesListElement.innerHTML = '';
@@ -74,8 +73,6 @@ async function handleDeleteCommentClick(thisButton){
 
 function deleteComment(thisButton) {
   const params = new URLSearchParams();
-  var messageId = thisButton.id;
-  var liElementToDelete = thisButton.parentNode;
   params.append('messageId', messageId);
   fetch('/delete-data', {method: 'POST', body: params});
 }
