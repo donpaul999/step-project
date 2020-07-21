@@ -144,3 +144,8 @@ async function translateComments(){
     }
     return comments;
 }
+
+function onLoadHandleFunctions(){
+    testLogIn();
+    handleGetCommentsClick();
+}
