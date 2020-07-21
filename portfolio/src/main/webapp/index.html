@@ -5,13 +5,14 @@
     <meta charset="UTF-8">
     <title>Personal Portfolio | Paul Colța</title>
     <link rel="stylesheet" href="style.css">
+    <link href = "https://fonts.googleapis.com/icon?family=Material+Icons" rel = "stylesheet">
     <script src="script.js"></script>
   </head>
-  <body style="background-color: #435969;" onload="onLoadHandleFunctions()">
+  <body style="background-color: #435969;" onload="handleFunctionsOnLoad()">
     <div id="content">
      <div id= "header">
       <img src="img/picture_of_me.jpg" alt="Paul" style="width:300px;height:180px;">  
-      <p>Hi! I'm a <b>STEP Intern</b> in the Plx ZRH team. I'm from Romania, a country from the Southestern part of Europe.</br>
+      <p>Hi! I'm a <b>STEP Intern</b> in the Plx ZRH team. I'm from Romania, a country from the Southestern part of Europe.</p>
       <div id="buttonline">
         <button onclick=showSection("about")>About Me</button>
         <button onclick=showSection("skills")>Skills</button>
@@ -54,12 +55,11 @@
                <option value = "de">German</option>
                <option value = "te">Telugu</option>
              </select></br>
-            <form action="/data" method="POST">
                 <div class="form-group">
                     <label for="textarea-add-comments">Enter comment</label>
                     <textarea name="text-input" id="textarea-add-comments" class="textarea" required></textarea>
                     <input type="hidden" class="btn btn-primary" name="email" id="email-input" value="">
-                    <input type="submit" class="btn btn-primary" value="Submit comment">
+                    <input type="submit" class="btn btn-primary" onclick="handleSendCommentClick()" value="Submit comment">
                 </div>    
             </form>
         </div>

@@ -75,7 +75,7 @@ public class DataServlet extends HttpServlet {
   */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String newMessage = getParameter(request, "text-input", "");
+    String newMessage = getParameter(request, "messageContent", "");
     String email = getParameter(request, "email", "");
     if(newMessage != "" && email != ""){
         long timestamp = System.currentTimeMillis();

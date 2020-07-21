@@ -12,6 +12,45 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+function handleFunctionsOnLoad(){
+  testLogIn();
+  handleGetCommentsClick();
+}
+
+async function handleGetCommentsClick(){
+  renderLoadingListElement();
+  const messages = await getCommentsFromServer();
+  renderComments(messages);
+}
+
+async function handleSendCommentClick(){
+  renderLoadingListElement();
+  await sendCommentToServer();
+  const messages = await getCommentsFromServer();
+  renderComments(messages);
+}
+
+async function handleDeleteCommentClick(buttonElement){
+  renderLoadingListElement();
+  await deleteComment(buttonElement);
+  const messages = await getCommentsFromServer();
+  renderComments(messages);
+}
+
+async function  handleTranslateComments(){
+  renderLoadingListElement();
+  var comments =  await translateComments();
+  renderComments(comments);
+}
+
+async function sendCommentToServer(){
+  const params = new URLSearchParams();
+  var messageContent = document.getElementById("textarea-add-comments").value;
+  var email = document.getElementById("email-input").value;
+  params.append('messageContent', messageContent);
+  params.append('email', email);
+  await fetch('/data', {method: 'POST', body: params});
+}
 
 async function getCommentsFromServer() {
   var numberOfComments = document.getElementById("comments-number").value;
@@ -22,35 +61,31 @@ async function getCommentsFromServer() {
   return fetch(url).then(response =>response.json());
 }
 
-async function handleGetCommentsClick(){
-   renderLoadingListElement();
-   const messages = await getCommentsFromServer();
-   renderComments(messages);
-}
+
 
 function renderComments(messages){
-    const messagesListElement = document.getElementById('comments-container');
-    if(messagesListElement.innerHTML !== ''){
-        messagesListElement.innerHTML = '';
-    }
+  const messagesListElement = document.getElementById('comments-container');
+  if(messagesListElement.innerHTML !== ''){
+    messagesListElement.innerHTML = '';
+  }
 
-    for(var i = 0; i < messages.length; ++i){
-        var domListElement = createDOMListElement(messages[i].propertyMap.email, messages[i].propertyMap.content);
-        domListElement.appendChild(createDOMButton(messages[i].propertyMap.messageId));
-        messagesListElement.appendChild(domListElement);
-    }
+  for(var i = 0; i < messages.length; ++i){
+    var domListElement = createDOMListElement(messages[i].propertyMap.email, messages[i].propertyMap.content);
+    domListElement.appendChild(createDOMButton(messages[i].propertyMap.messageId));
+    messagesListElement.appendChild(domListElement);
+  }
     
-    if(messages.length === 0){
-        var content = "No comments available!";
-        var domListElement = createDOMListElement(content);
-        messagesListElement.appendChild(domListElement);
-    }
+  if(messages.length === 0){
+    var content = "No comments available!";
+    var domListElement = createDOMListElement(content);
+    messagesListElement.appendChild(domListElement);
+  }
 }
 
 function createDOMListElement(email, text) {
   const domListElement = document.createElement('li');
   if(email !== "")
-   domListElement.innerText = email + ": ";
+    domListElement.innerText = email + ": ";
   domListElement.innerText += text;
   domListElement.classList.add('list-group-item');
   return domListElement;
@@ -65,18 +100,12 @@ function createDOMButton(messageId) {
   return domButtonElement;
 }
 
-function handleDeleteCommentClick(buttonElement){
-   deleteComment(buttonElement);
-   const messages = getCommentsFromServer();
-   renderComments(messages);
-}
-
-function deleteComment(thisButton) {
+async function deleteComment(thisButton) {
   const params = new URLSearchParams();
   var messageId = thisButton.id;
   var liElementToDelete = thisButton.parentNode;
   params.append('messageId', messageId);
-  fetch('/delete-data', {method: 'POST', body: params});
+  await fetch('/delete-data', {method: 'POST', body: params});
 }
 
 
@@ -112,40 +141,31 @@ function testLogIn(){
 }
 
 function renderLoadingListElement(){
-    const resultContainer = document.getElementById('comments-container');
-    resultContainer.innerHTML = '';
-    var content = "Loading...";
-    var domListElement = createDOMListElement("", content);
-    resultContainer.appendChild(domListElement);
+  const resultContainer = document.getElementById('comments-container');
+  resultContainer.innerHTML = '';
+  var content = "Loading...";
+  var domListElement = createDOMListElement("", content);
+  resultContainer.appendChild(domListElement);
 }
 
-async function  handleTranslateComments(){
-    renderLoadingListElement();
-    var comments =  await translateComments();
-    console.log(comments);
-    renderComments(comments);
-}
+
 
 async function translateComments(){
 
-    const languageCode = document.getElementById('languages-list').value;
-    var comments =  await getCommentsFromServer();
-    for(var i = 0; i < comments.length; ++i){
-        var params = new URLSearchParams();
-        params.append('message', comments[i].propertyMap.content);
-        params.append('languageCode', languageCode);
-        comments[i].propertyMap.content = await fetch('/translate', {
-          method: 'POST',
-          body: params
-        }).then(response => response.text())
+  const languageCode = document.getElementById('languages-list').value;
+  var comments =  await getCommentsFromServer();
+  for(var i = 0; i < comments.length; ++i){
+    var params = new URLSearchParams();
+    params.append('message', comments[i].propertyMap.content);
+    params.append('languageCode', languageCode);
+    comments[i].propertyMap.content = await fetch('/translate', {
+        method: 'POST',
+        body: params
+    }).then(response => response.text())
         .then((translatedMessage) => {
-          return translatedMessage;
+            return translatedMessage;
         });
-    }
-    return comments;
+  }
+  return comments;
 }
 
-function onLoadHandleFunctions(){
-    testLogIn();
-    handleGetCommentsClick();
-}
