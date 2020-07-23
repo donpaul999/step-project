@@ -65,18 +65,16 @@ function createDOMButton(messageId) {
   return domButtonElement;
 }
 
-function handleDeleteCommentClick(buttonElement){
-   deleteComment(buttonElement);
-   const messages = getCommentsFromServer();
+async function handleDeleteCommentClick(buttonElement){
+   await deleteComment(buttonElement);
+   const messages = await getCommentsFromServer();
    renderComments(messages);
 }
 
 function deleteComment(thisButton) {
   const params = new URLSearchParams();
-  var messageId = thisButton.id;
-  var liElementToDelete = thisButton.parentNode;
   params.append('messageId', messageId);
-  fetch('/delete-data', {method: 'POST', body: params});
+  return fetch('/delete-data', {method: 'POST', body: params});
 }
 
 
