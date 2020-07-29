@@ -5,12 +5,14 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: normal; 
   color: #fdf7f7;
+  line-height: 1.3;
 }
 
 .content {
-  max-width: 60%;
+  max-width: 800px;
   padding: 0 24px;
   margin: 0 auto;
   display: flex;
@@ -45,7 +47,7 @@ body {
   display: flex;
 }
 
-.header ul li a, .footer div a {
+.header ul li a, .footer div a, .header h1 a {
   display: inline-block;
   margin: 0 8px;
   text-decoration: none;
@@ -260,4 +262,8 @@ body {
 
 #comments-container {
     padding: 0;
+}
+
+:target {
+  scroll-margin-top: 80px;
 }

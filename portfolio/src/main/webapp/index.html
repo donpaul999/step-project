@@ -2,23 +2,26 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Personal Portfolio | Paul Colța</title>
         <link rel="stylesheet" href="style.css">
+        <link rel="icon" href="img/icon.png" type="image/jpg">
         <link rel="scr" href="style.css">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">`
         <script src="script.js"></script>
     </head>
     <body>
         <div class="header">
             <div class="content">
-            <h1>Paul Colța</h1>
+            <h1><a href="#about">Paul Colța</a></h1>
                 <ul>
                     <li><a href="#description">About Me</a></li>
                     <li><a href="#skills">Skills</a></li>
-                    <li><a href="#comments">Leave a comment</a></li>
+                    <li><a href="#comments-div">Leave a comment</a></li>
                 </ul>
             </div>
         </div>
-        <div class="about">
+        <div class="about"  id="about">
                 <div class="content text-content">
                   <ul>
                     <li> <img class="picture" src="img/square_pic.jpg" alt="Paul">  </li>
@@ -46,7 +49,7 @@
                 </p>
             </div>
         </div>
-        <div class="comment">
+        <div class="comment" id="comments-div">
             <div class="content text-content">
                 <h1 class="title">Comments</h1>
                 <div class="login" id="log-in" style="display:none; text-align:center;">
@@ -71,9 +74,9 @@
                     </br>
                     <ul id="comments-container"></ul>
                     <div class="comment-form">
-                            <textarea name="text-input" id="textarea-add-comments" class="textarea" type="text" required  placeholder="Leave a comment here" required></textarea></br>
+                            <textarea name="text-input" id="textarea-add-comments" onkeyup="stoppedTyping()" class="textarea" type="text"  placeholder="Leave a comment here" required></textarea></br>
                             <input type="hidden" name="email" id="email-input" value="">
-                            <input type="submit" class="comment-submit" onclick="handleSendCommentClick()" value="Submit">
+                            <input type="submit" class="comment-submit" id="submit-button" onclick="handleSendCommentClick()" value="Submit">
                     </div>
                 </div>
                 <div class="login" id="log-out" style="display:none;">
