@@ -12,64 +12,72 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-function getMessagesFromServer() {
-  var numberOfComments = document.getElementById("messages-number").value;
-  if(numberOfComments == null){
+async function getCommentsFromServer() {
+  var numberOfComments = document.getElementById("comments-number").value;
+  if(!numberOfComments){
       numberOfComments = 0;
   }
-  
   var url = '/data?nr=' + numberOfComments;
   fetch(url).then(response => response.json()).then((messages) => {
     const messagesListElement = document.getElementById('messages-container');
+  return fetch(url).then(response =>response.json());
+}
+
+
+async function handleGetCommentsClick(){
+   const messages = await getCommentsFromServer();
+   renderComments(messages);
+}
+
+async function renderComments(messages){
+    const messagesListElement = document.getElementById('comments-container');
     if(messagesListElement.innerHTML !== ''){
         messagesListElement.innerHTML = '';
     }
 
-    for(i = 0; i < messages.length; ++i){
-        childToAppend = createListElement(messages[i].propertyMap.content);
-        childToAppend.appendChild(createButton(messages[i].propertyMap.messageId));
-        messagesListElement.appendChild(childToAppend);
+    for(var i = 0; i < messages.length; ++i){
+        var domListElement = createDOMListElement(messages[i].propertyMap.email, messages[i].propertyMap.content);
+        domListElement.appendChild(createDOMButton(messages[i].propertyMap.messageId));
+        messagesListElement.appendChild(domListElement);
     }
     
     if(messages.length === 0){
-        var content = "No messages available!";
-        childToAppend = createListElement(content);
-        messagesListElement.appendChild(childToAppend);
+        var content = "No comments available!";
+        var domListElement = createDOMListElement(content);
+        messagesListElement.appendChild(domListElement);
     }
-  });
 }
 
-function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  liElement.classList.add('list-group-item');
-  return liElement;
+function createDOMListElement(email, text) {
+  const domListElement = document.createElement('li');
+  if(email != "")
+   domListElement.innerText = email + ": ";
+  domListElement.innerText += text;
+  domListElement.classList.add('list-group-item');
+  return domListElement;
 }
 
-function createButton(messageId) {
-  const buttonElement = document.createElement('button');
-  buttonElement.classList.add('delete-button');
-  buttonElement.textContent = "Delete";
-  buttonElement.id = messageId;
-  buttonElement.setAttribute( "onClick", "javascript: deleteMessage(this);" );
-  return buttonElement;
+function createDOMButton(messageId) {
+  const domButtonElement = document.createElement('button');
+  domButtonElement.classList.add('delete-button');
+  domButtonElement.textContent = "Delete";
+  domButtonElement.id = messageId;
+  domButtonElement.setAttribute( "onClick", "javascript: handleDeleteCommentClick(this);" );
+  return domButtonElement;
 }
 
+async function handleDeleteCommentClick(thisButton){
+   deleteComment(thisButton);
+   const messages = await getCommentsFromServer();
+   renderComments(messages);
+}
 
-function deleteMessage(thisButton) {
+function deleteComment(thisButton) {
   const params = new URLSearchParams();
-  var messageId = thisButton.id;
-  var liElementToDelete = thisButton.parentNode;
   params.append('messageId', messageId);
-  deleteLi(liElementToDelete);
   fetch('/delete-data', {method: 'POST', body: params});
 }
 
-function deleteLi(liToDelete) {
-  var listWhereToRemove = liToDelete.parentNode;
-  listWhereToRemove.removeChild(liToDelete);
-}
 
 function showSection(idToShow) {
   var elem1 = document.getElementById("about");
@@ -100,3 +108,4 @@ function testLogIn(){
       }
   });
 }
+
