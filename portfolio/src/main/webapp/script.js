@@ -11,15 +11,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 async function getCommentsFromServer() {
   var numberOfComments = document.getElementById("comments-number").value;
   if(!numberOfComments){
       numberOfComments = 0;
   }
-  
   var url = '/data?nr=' + numberOfComments;
+  fetch(url).then(response => response.json()).then((messages) => {
+    const messagesListElement = document.getElementById('messages-container');
   return fetch(url).then(response =>response.json());
-  
 }
 
 
@@ -91,3 +92,20 @@ function showSection(idToShow) {
     elem4.style.display = "block";
   } 
 }
+
+function testLogIn(){
+  const params = new URLSearchParams();
+  fetch('/home').then(response => response.json()).then((userStatus) => {
+      console.log(userStatus);
+      if(userStatus.propertyMap.email){
+        document.getElementById("log-out").style.display = "block";
+        document.getElementById("email-text").innerText = "Hi, " + userStatus.propertyMap.email + "!";
+        document.getElementById("log-out-link").href = userStatus.propertyMap.link;
+      }
+      else{
+        document.getElementById("log-in").style.display = "block";
+        document.getElementById("log-in-link").href = userStatus.propertyMap.link;
+      }
+  });
+}
+

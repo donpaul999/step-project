@@ -40,6 +40,9 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     int numberOfMessages = Integer.parseInt(request.getParameter("nr"));
+    if(numberOfMessages == 0){
+        numberOfMessages = 100;
+    }
     Query query = new Query("Message").addSort("timestamp", SortDirection.DESCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery preparedQuery = datastore.prepare(query);
