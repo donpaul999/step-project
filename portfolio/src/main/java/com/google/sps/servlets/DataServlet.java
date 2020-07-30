@@ -13,7 +13,13 @@
 // limitations under the License.
 
 package com.google.sps.servlets;
-
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.lang.Math; 
 import java.util.List;
@@ -22,30 +28,67 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.appengine.api.datastore.FetchOptions;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private List<String> names;
-
-  @Override
-  public void init(){
-    names = new ArrayList<>();
-    names.add("Alex");
-    names.add("Ana");
-    names.add("Ion");
-    names.add("Paul");
-    names.add("Robert");
-    names.add("Andrei");
-    names.add("Matei");
-    names.add("Radu");
-  }  
-
+  /**
+  * Loads messages from database and transforms them into a JSON object
+  */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String nameToPrint = names.get((int) (Math.random() * names.size())); 
-    response.setContentType("text/html;");
-    response.getWriter().println(nameToPrint);
+    int numberOfMessages = Integer.parseInt(request.getParameter("nr"));
+    Query query = new Query("Message").addSort("timestamp", SortDirection.DESCENDING);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery preparedQuery = datastore.prepare(query);
+    List<Entity> results = preparedQuery.asList(FetchOptions.Builder.withLimit(numberOfMessages));
+
+    ArrayList<Entity> messages = new ArrayList<>();
+    for (Entity entity : results) {
+      String messageText = (String) entity.getProperty("content");
+      long messageId = entity.getKey().getId();
+      Entity newMessage = new Entity("Message");
+      newMessage.setProperty("content", messageText);
+      newMessage.setProperty("messageId", messageId);
+      messages.add(newMessage);
+    }
+
+    String json = convertToJsonUsingGson(messages);
+    response.setContentType("application/json;");
+    response.getWriter().println(json);
+  }
+
+  /**
+  * Gets message from user and saves it to the database
+  */
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String newMessage = getParameter(request, "text-input", "");
+    if(newMessage != ""){
+        long timestamp = System.currentTimeMillis();
+        Entity messageEntity = new Entity("Message");
+        messageEntity.setProperty("content", newMessage);
+        messageEntity.setProperty("timestamp", timestamp);
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        datastore.put(messageEntity);
+    }
+
+    response.sendRedirect("/index.html");
+  }
+
+  private String convertToJsonUsingGson(ArrayList<Entity> messages) {
+    Gson gson = new Gson();
+    String json = gson.toJson(messages);
+    return json;
+  }
+
+  private String getParameter(HttpServletRequest request, String name,  String defaultValue) {
+    String value = request.getParameter(name);
+    if (value == null) {
+      return defaultValue;
+    }
+    return value;
   }
 }
