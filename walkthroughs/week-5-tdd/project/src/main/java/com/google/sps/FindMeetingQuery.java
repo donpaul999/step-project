@@ -30,67 +30,70 @@ public final class FindMeetingQuery {
   * Receive events and a request and returns all the available time intervals
   */  
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-      Collection<TimeRange> result;
-      Collection<String> requestAttendees = request.getAttendees();
-      Collection<String> requestOptionalAttendees = request.getOptionalAttendees();
-      
-      ArrayList<TimeRange> resultList = new ArrayList<TimeRange>();
-      ArrayList<TimeRange> resultWithOptional = new ArrayList<TimeRange>();
-      
-      int previousEventEndTime = TimeRange.START_OF_DAY;
-      int previousEventTimeOptionalAttendees = TimeRange.START_OF_DAY;
-      long requestedTime = request.getDuration();
+     long duration = request.getDuration();
 
-      result = Arrays.asList();
-      
-      if(TimeRange.END_OF_DAY < requestedTime){
-            return result;
+     if(TimeRange.END_OF_DAY < duration){
+            return Collections.<TimeRange>emptyList();
       }
 
-      if(events.size() == 0){
-          result = Arrays.asList(TimeRange.WHOLE_DAY);
-          return result;
+     if(events.size() == 0){
+          return Collections.singletonList(TimeRange.WHOLE_DAY);
       }
-      
 
+     Collection<TimeRange> result;
+     result = Arrays.asList();
+
+     ArrayList<String> requestAttendees = new ArrayList<String>(request.getAttendees());
+     ArrayList<String> requestAllAttendees = new ArrayList<String>(request.getOptionalAttendees());
+     requestAllAttendees.addAll(requestAttendees);
+
+     ArrayList<TimeRange> resultList = 
+        generateFreeTimeIntervals(requestAttendees, events, duration);
+     ArrayList<TimeRange> resultWithOptional = 
+        generateFreeTimeIntervals(requestAllAttendees, events, duration);
+
+     if(resultWithOptional.size() == 0) result = resultList;
+     else result = resultWithOptional; 
+
+     return result;
+   
+  }
+  
+  /*
+  * Creats a time range with the start time and event's start time sent as parameter.
+  * Returns the time range if its duration is >= than the requested one
+  */
+  public TimeRange getSlot(int startTime, Event event, long duration){
+    TimeRange freeTimeInterval = TimeRange.fromStartEnd(startTime, event.getWhen().start(), false);
+    if(freeTimeInterval.duration() >= duration){
+        return freeTimeInterval;                   
+    }
+    return null;  
+  }
+
+  /*
+  * Returns all time ranges available for scheduling meetings for the given atendees.
+  */
+  public ArrayList<TimeRange> generateFreeTimeIntervals(ArrayList<String> atendees, Collection<Event> events, long duration){
+     int currentStartTime = TimeRange.START_OF_DAY;
+     ArrayList<TimeRange> resultList = new ArrayList<TimeRange>();
      for (Event event : events) {
-         Collection<String> eventAttendees = event.getAttendees();
+         if(!atendees.containsAll(event.getAttendees())) continue;
+
          TimeRange eventInterval = event.getWhen();
-         int eventStartTime = eventInterval.start();
-         if(requestAttendees.containsAll(eventAttendees)){
-            if(previousEventEndTime + requestedTime <= eventStartTime){
-                    resultList.add(TimeRange.fromStartEnd(previousEventEndTime, eventStartTime, false));
-            }
-            if(previousEventEndTime <  eventInterval.end())
-                previousEventEndTime =  eventInterval.end();
+         TimeRange slot = getSlot(currentStartTime, event, duration);
+         if(slot != null){
+            resultList.add(slot);
+         }
+         if(currentStartTime <  eventInterval.end()){
+            currentStartTime = eventInterval.end();      
+         }
+     }
 
-            if(previousEventTimeOptionalAttendees + requestedTime <= eventStartTime){
-                resultWithOptional.add(TimeRange.fromStartEnd(previousEventTimeOptionalAttendees, eventStartTime, false));
-                }
-            if(previousEventTimeOptionalAttendees <  eventInterval.end())
-                previousEventTimeOptionalAttendees =  eventInterval.end();
-            } 
+     if(TimeRange.END_OF_DAY - currentStartTime >= duration)
+        resultList.add(TimeRange.fromStartEnd(currentStartTime, TimeRange.END_OF_DAY, true));
 
-         if(requestOptionalAttendees.containsAll(eventAttendees)){
-            if(previousEventTimeOptionalAttendees + requestedTime <= eventStartTime){
-                    resultWithOptional.add(TimeRange.fromStartEnd(previousEventTimeOptionalAttendees, eventStartTime, false));
-                }
-            if(previousEventTimeOptionalAttendees <  eventInterval.end())
-                    previousEventTimeOptionalAttendees =  eventInterval.end();      
-            }
-        }
-
-     if(previousEventEndTime <= TimeRange.END_OF_DAY)
-        resultList.add(TimeRange.fromStartEnd(previousEventEndTime, TimeRange.END_OF_DAY, true));
-     
-     if(previousEventTimeOptionalAttendees < TimeRange.END_OF_DAY)
-            resultWithOptional.add(TimeRange.fromStartEnd(previousEventTimeOptionalAttendees, TimeRange.END_OF_DAY, true));
-
-     if(resultWithOptional.size() == 0)
-        result = resultList;
-     else
-        result = resultWithOptional; 
-
-      return result;
+    return resultList;
   }
 }
+
