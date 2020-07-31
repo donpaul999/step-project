@@ -47,7 +47,7 @@ async function renderComments(messages){
         messagesListElement.appendChild(domListElement);
     }
 }
-
+  
 function createDOMListElement(email, text) {
   const domListElement = document.createElement('li');
   if(email != "")
@@ -96,9 +96,10 @@ function showSection(idToShow) {
 function testLogIn(){
   const params = new URLSearchParams();
   fetch('/home').then(response => response.json()).then((userStatus) => {
-      console.log(userStatus);
       if(userStatus.propertyMap.email){
+        document.getElementById("comments").style.display = "block";
         document.getElementById("log-out").style.display = "block";
+        document.getElementById("email-input").value = userStatus.propertyMap.email;
         document.getElementById("email-text").innerText = "Hi, " + userStatus.propertyMap.email + "!";
         document.getElementById("log-out-link").href = userStatus.propertyMap.link;
       }
