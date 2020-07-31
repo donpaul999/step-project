@@ -90,9 +90,9 @@ public final class FindMeetingQuery {
          }
      }
 
-     if(TimeRange.END_OF_DAY - currentStartTime >= duration)
+     if(TimeRange.END_OF_DAY - currentStartTime >= duration){
         resultList.add(TimeRange.fromStartEnd(currentStartTime, TimeRange.END_OF_DAY, true));
-
+     }
     return resultList;
   }
 }
