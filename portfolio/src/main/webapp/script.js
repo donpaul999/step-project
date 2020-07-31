@@ -75,7 +75,6 @@ function renderComments(messages) {
     );
     messagesListElement.appendChild(domListElement);
   }
-
   if (messages.length === 0) {
     var content = 'No comments available!';
     var domListElement = createDOMListElement();
@@ -185,3 +184,4 @@ function stoppedTyping(){
         document.getElementById('submit-button').disabled = true;
     }
 }
+
