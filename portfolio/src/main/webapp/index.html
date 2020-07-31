@@ -36,19 +36,25 @@
             <a href="http://contar.io/p/stefanut999" target="_blank">Contar.io</a><br>
         </div>
         <div id="comments" style="display:none;"> 
-            <ul class="text" id="messages-container"></ul>
-            <label for="messages-number">Number of messages</label>
-            <input type="number" id="messages-number" name="messages-number" min="1" max="100">
-            <button onclick="handleGetCommentsClick()" class="comment-button">Get Messages</button>
-        </div>
-        </br>
-        <div class="comments" style="display:none;">
+            <ul class="text" id="comments-container"></ul>
+            <label for="comments-number">Number of comments</label>
+            <input type="number" id="comments-number" name="comments-number" min="1" max="100">
+            <button onclick="handleGetCommentsClick()" class="comment-button">Get Comments</button></br></br>            
+            <select id="languages-list" onchange="handleTranslateComments()">
+              <option value="" selected disabled hidden>Chose language</option>
+               <option value="ro">Romanian</option>
+               <option value="en">English</option>
+               <option value="zh">Chinese</option>
+               <option value="it">Italian</option>
+               <option value="de">German</option>
+               <option value="te">Telugu</option>
+             </select></br>
             <form action="/data" method="POST">
                 <div class="form-group">
                     <label for="textarea-add-comments">Enter comment</label>
                     <textarea name="text-input" id="textarea-add-comments" class="form-control" required></textarea>
                     <input type="hidden" class="btn btn-primary" name="email" id="email-input" value="">
-                    <input type="submit" class="btn btn-primary" value="Submit">
+                    <input type="submit" class="btn btn-primary" value="Submit comment">
                 </div>    
             </form>
         </div>

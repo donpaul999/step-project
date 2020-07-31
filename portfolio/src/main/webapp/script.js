@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+
 async function getCommentsFromServer() {
   var numberOfComments = document.getElementById("comments-number").value;
   if(!numberOfComments){
@@ -47,10 +48,10 @@ async function renderComments(messages){
         messagesListElement.appendChild(domListElement);
     }
 }
-  
+
 function createDOMListElement(email, text) {
   const domListElement = document.createElement('li');
-  if(email != "")
+  if(email !== "")
    domListElement.innerText = email + ": ";
   domListElement.innerText += text;
   domListElement.classList.add('list-group-item');
@@ -110,3 +111,36 @@ function testLogIn(){
   });
 }
 
+function renderLoadingListElement(){
+    const resultContainer = document.getElementById('comments-container');
+    resultContainer.innerHTML = '';
+    var content = "Loading...";
+    var domListElement = createDOMListElement("", content);
+    resultContainer.appendChild(domListElement);
+}
+
+async function  handleTranslateComments(){
+    renderLoadingListElement();
+    var comments =  await translateComments();
+    console.log(comments);
+    renderComments(comments);
+}
+
+async function translateComments(){
+
+    const languageCode = document.getElementById('languages-list').value;
+    var comments =  await getCommentsFromServer();
+    for(var i = 0; i < comments.length; ++i){
+        var params = new URLSearchParams();
+        params.append('message', comments[i].propertyMap.content);
+        params.append('languageCode', languageCode);
+        comments[i].propertyMap.content = await fetch('/translate', {
+          method: 'POST',
+          body: params
+        }).then(response => response.text())
+        .then((translatedMessage) => {
+          return translatedMessage;
+        });
+    }
+    return comments;
+}
