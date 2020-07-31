@@ -110,6 +110,7 @@ function createDOMParagraph(text) {
 function createDOMButton(messageId) {
   const domButtonElement = document.createElement('button');
   domButtonElement.classList.add('delete-button');
+  domButtonElement.classList.add('button-property');
   domButtonElement.id = messageId;
   domButtonElement.innerText = 'x';
   domButtonElement.setAttribute(
