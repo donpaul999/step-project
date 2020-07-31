@@ -35,7 +35,7 @@ import com.google.appengine.api.datastore.FetchOptions;
 public class DataServlet extends HttpServlet {
 
   /**
-  * Loads messages from database and transform them into a JSON object
+  * Loads messages from database and transforms them into a JSON object
   */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -43,7 +43,6 @@ public class DataServlet extends HttpServlet {
     if(numberOfMessages == 0){
         numberOfMessages = 100;
     }
-
     Query query = new Query("Message").addSort("timestamp", SortDirection.DESCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery preparedQuery = datastore.prepare(query);
@@ -65,7 +64,7 @@ public class DataServlet extends HttpServlet {
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
-  
+
   /**
   * Gets message from user and saves it to the database
   */

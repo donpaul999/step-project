@@ -15,20 +15,22 @@
 
 async function getCommentsFromServer() {
   var numberOfComments = document.getElementById("comments-number").value;
-  if(numberOfComments === ""){
-      numberOfComments = 100;
+  if(!numberOfComments){
+      numberOfComments = 0;
   }
   var url = '/data?nr=' + numberOfComments;
+  fetch(url).then(response => response.json()).then((messages) => {
+    const messagesListElement = document.getElementById('messages-container');
   return fetch(url).then(response =>response.json());
 }
 
+
 async function handleGetCommentsClick(){
-   renderLoadingListElement();
    const messages = await getCommentsFromServer();
    renderComments(messages);
 }
 
-function renderComments(messages){
+async function renderComments(messages){
     const messagesListElement = document.getElementById('comments-container');
     if(messagesListElement.innerHTML !== ''){
         messagesListElement.innerHTML = '';
@@ -65,8 +67,8 @@ function createDOMButton(messageId) {
   return domButtonElement;
 }
 
-async function handleDeleteCommentClick(buttonElement){
-   await deleteComment(buttonElement);
+async function handleDeleteCommentClick(thisButton){
+   deleteComment(thisButton);
    const messages = await getCommentsFromServer();
    renderComments(messages);
 }
@@ -74,7 +76,7 @@ async function handleDeleteCommentClick(buttonElement){
 function deleteComment(thisButton) {
   const params = new URLSearchParams();
   params.append('messageId', messageId);
-  return fetch('/delete-data', {method: 'POST', body: params});
+  fetch('/delete-data', {method: 'POST', body: params});
 }
 
 
