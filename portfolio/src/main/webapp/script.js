@@ -178,10 +178,10 @@ async function translateComments() {
   return comments;
 }
 
-function stoppedTyping(){
-    if(document.getElementById('textarea-add-comments').value.length > 0) { 
-        document.getElementById('submit-button').disabled = false; 
-    } else { 
-        document.getElementById('submit-button').disabled = true;
-    }
+function stoppedTyping() {
+  if (document.getElementById('textarea-add-comments').value.length > 0) {
+    document.getElementById('submit-button').disabled = false;
+  } else {
+    document.getElementById('submit-button').disabled = true;
+  }
 }
