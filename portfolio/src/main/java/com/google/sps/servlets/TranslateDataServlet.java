@@ -13,47 +13,50 @@
 // limitations under the License
 
 package com.google.sps.servlets;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.lang.Math; 
-import java.util.List;
+import java.lang.Math;
 import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.appengine.api.datastore.FetchOptions;
-import com.google.cloud.translate.Translate;
-import com.google.cloud.translate.TranslateOptions;
-import com.google.cloud.translate.Translation;
-
 
 //Servlet that translates comments
 
 @WebServlet("/translate")
 public class TranslateDataServlet extends HttpServlet {
-  
+
   /**
-  * Gets message from server and returns it translated
-  */
+   * Gets message from server and returns it translated
+   */
   @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
+    throws IOException {
     String textToTranslate = request.getParameter("message");
     String languageCode = request.getParameter("languageCode");
 
     Translate translate = TranslateOptions.getDefaultInstance().getService();
-    Translation translation = translate.translate(textToTranslate, Translate.TranslateOption.targetLanguage(languageCode));
+    Translation translation = translate.translate(
+      textToTranslate,
+      Translate.TranslateOption.targetLanguage(languageCode)
+    );
     String translatedText = translation.getTranslatedText();
 
     response.setContentType("text/html; charset=UTF-8");
     response.setCharacterEncoding("UTF-8");
     response.getWriter().println(translatedText);
-
   }
 }

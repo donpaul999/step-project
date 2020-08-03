@@ -13,12 +13,13 @@
 // limitations under the License.
 
 package com.google.sps.servlets;
+
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
-import com.google.gson.Gson;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,29 +27,32 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/home")
 public class UserStatusServlet extends HttpServlet {
-  
+
   /**
-  * Check if the user is logged in or not and returns log in/log out link along with user's email
-  */
+   * Check if the user is logged in or not and returns log in/log out link along with user's email
+   */
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+    throws IOException {
     response.setContentType("text/html");
     PrintWriter out = response.getWriter();
-    
+
     Entity userStatus = new Entity("User");
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
-        userStatus.setProperty("email", "");
-        userStatus.setProperty("link", userService.createLoginURL("/index.html"));
-    }
-    else{
-        userStatus.setProperty("email", userService.getCurrentUser().getEmail());
-        userStatus.setProperty("link", userService.createLogoutURL("/index.html"));
+      userStatus.setProperty("email", "");
+      userStatus.setProperty("link", userService.createLoginURL("/index.html"));
+    } else {
+      userStatus.setProperty("email", userService.getCurrentUser().getEmail());
+      userStatus.setProperty(
+        "link",
+        userService.createLogoutURL("/index.html")
+      );
     }
     String json = convertToJsonUsingGson(userStatus);
     out.println(json);
   }
-  
+
   private String convertToJsonUsingGson(Entity user) {
     Gson gson = new Gson();
     String json = gson.toJson(user);

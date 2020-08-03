@@ -13,43 +13,47 @@
 // limitations under the License.
 
 package com.google.sps.servlets;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.lang.Math; 
-import java.util.List;
+import java.lang.Math;
 import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.appengine.api.datastore.FetchOptions;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
   /**
-  * Loads messages from database and transform them into a JSON object
-  */
+   * Loads messages from database and transform them into a JSON object
+   */
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+    throws IOException {
     int numberOfMessages = Integer.parseInt(request.getParameter("nr"));
-    Query query = new Query("Message").addSort("timestamp", SortDirection.DESCENDING);
+    Query query = new Query("Message")
+    .addSort("timestamp", SortDirection.DESCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery preparedQuery = datastore.prepare(query);
     int lengthOfQuery = preparedQuery.countEntities();
     List<Entity> results;
 
-    if(numberOfMessages != -1)
-        results = preparedQuery.asList(FetchOptions.Builder.withLimit(numberOfMessages));
-    else
-        results = preparedQuery.asList(FetchOptions.Builder.withLimit(lengthOfQuery));
+    if (numberOfMessages != -1) results =
+      preparedQuery.asList(
+        FetchOptions.Builder.withLimit(numberOfMessages)
+      ); else results =
+      preparedQuery.asList(FetchOptions.Builder.withLimit(lengthOfQuery));
 
     ArrayList<Entity> messages = new ArrayList<>();
     for (Entity entity : results) {
@@ -61,7 +65,7 @@ public class DataServlet extends HttpServlet {
       newMessage.setProperty("content", messageText);
       newMessage.setProperty("messageId", messageId);
       newMessage.setProperty("email", email);
-      
+
       messages.add(newMessage);
     }
 
@@ -69,22 +73,23 @@ public class DataServlet extends HttpServlet {
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
-  
+
   /**
-  * Gets message from user and saves it to the database
-  */
+   * Gets message from user and saves it to the database
+   */
   @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
+    throws IOException {
     String newMessage = getParameter(request, "messageContent", "");
     String email = getParameter(request, "email", "");
-    if(newMessage != "" && email != ""){
-        long timestamp = System.currentTimeMillis();
-        Entity messageEntity = new Entity("Message");
-        messageEntity.setProperty("content", newMessage);
-        messageEntity.setProperty("timestamp", timestamp);
-        messageEntity.setProperty("email", email);
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        datastore.put(messageEntity);
+    if (newMessage != "" && email != "") {
+      long timestamp = System.currentTimeMillis();
+      Entity messageEntity = new Entity("Message");
+      messageEntity.setProperty("content", newMessage);
+      messageEntity.setProperty("timestamp", timestamp);
+      messageEntity.setProperty("email", email);
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      datastore.put(messageEntity);
     }
 
     response.sendRedirect("/index.html");
@@ -96,7 +101,11 @@ public class DataServlet extends HttpServlet {
     return json;
   }
 
-  private String getParameter(HttpServletRequest request, String name,  String defaultValue) {
+  private String getParameter(
+    HttpServletRequest request,
+    String name,
+    String defaultValue
+  ) {
     String value = request.getParameter(name);
     if (value == null) {
       return defaultValue;
