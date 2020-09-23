@@ -40,28 +40,23 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     int numberOfMessages = Integer.parseInt(request.getParameter("nr"));
+    if(numberOfMessages == 0){
+        numberOfMessages = 100;
+    }
     Query query = new Query("Message").addSort("timestamp", SortDirection.DESCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery preparedQuery = datastore.prepare(query);
-    int lengthOfQuery = preparedQuery.countEntities();
-    List<Entity> results;
-
-    if(numberOfMessages != -1)
-        results = preparedQuery.asList(FetchOptions.Builder.withLimit(numberOfMessages));
-    else
-        results = preparedQuery.asList(FetchOptions.Builder.withLimit(lengthOfQuery));
+    List<Entity> results = preparedQuery.asList(FetchOptions.Builder.withLimit(numberOfMessages));
 
     ArrayList<Entity> messages = new ArrayList<>();
     for (Entity entity : results) {
       String messageText = (String) entity.getProperty("content");
       String email = (String) entity.getProperty("email");
       long messageId = entity.getKey().getId();
-
       Entity newMessage = new Entity("Message");
       newMessage.setProperty("content", messageText);
       newMessage.setProperty("messageId", messageId);
       newMessage.setProperty("email", email);
-      
       messages.add(newMessage);
     }
 
@@ -75,7 +70,7 @@ public class DataServlet extends HttpServlet {
   */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String newMessage = getParameter(request, "messageContent", "");
+    String newMessage = getParameter(request, "text-input", "");
     String email = getParameter(request, "email", "");
     if(newMessage != "" && email != ""){
         long timestamp = System.currentTimeMillis();

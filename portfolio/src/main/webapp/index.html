@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -29,68 +30,41 @@
            <p>I started with C/C++ and I still use it, mostly for teaching others programming.</p>
            <p>I'm familiar with Python, PHP, Java and the basics of Unix.</p>
         </div>
-        <div class="description" id="description">
-            <div class="content text-content">
-                <h1 class="title">About me</h1>
-                <p class="long-text">
-                    I'm studying Computer Science at Babes-Bolyai University in Cluj-Napoca. </br>
-                    In my spare time I playing on my <b>Nintendo Switch</b> and I enjoy <b>swimming</b>.
-                    I'm in love with the <b>Marvel</b> Universe! One day I'll have a big comics collection.
-                </p>
-            </div>
+        <div id="contact" class="description" style="display:none;"> 
+            <h2>Contact me</h2>
+            <p>Contar.io is my personal project, an online visiting card.</p>
+            <a href="http://contar.io/p/stefanut999" target="_blank">Contar.io</a><br>
         </div>
-        <div class="skills" id="skills">
-            <div class="content text-content">
-                <h1 class="title">Skills</h1>
-                <p>
-                    My CS passion started back in highschool where I started to learn <b>programming</b>.</br>
-                    I started with <b>C/C++</b> and I still use it, mostly for teaching others programming.</br>
-                    I'm familiar with <b>Python, PHP, Java</b> and the basics of <b>Unix</b>.
-                </p>
-            </div>
+        <div id="comments" style="display:none;"> 
+            <ul class="text" id="comments-container"></ul>
+            <label for="comments-number">Number of comments</label>
+            <input type="number" id="comments-number" name="comments-number" min="1" max="100">
+            <button onclick="handleGetCommentsClick()" class="comment-button">Get Comments</button></br></br>            
+            <select id="languages-list" onchange="handleTranslateComments()">
+              <option value="" selected disabled hidden>Chose language</option>
+               <option value="ro">Romanian</option>
+               <option value="en">English</option>
+               <option value="zh">Chinese</option>
+               <option value="it">Italian</option>
+               <option value="de">German</option>
+               <option value="te">Telugu</option>
+             </select></br>
+            <form action="/data" method="POST">
+                <div class="form-group">
+                    <label for="textarea-add-comments">Enter comment</label>
+                    <textarea name="text-input" id="textarea-add-comments" class="form-control" required></textarea>
+                    <input type="hidden" class="btn btn-primary" name="email" id="email-input" value="">
+                    <input type="submit" class="btn btn-primary" value="Submit comment">
+                </div>    
+            </form>
         </div>
-        <div class="comment" id="comments-div">
-            <div class="content text-content">
-                <h1 class="title">Comments</h1>
-                <div class="login" id="log-in" style="display:none; text-align:center;">
-                    <a href="#" class="myButton" id="log-in-link">Log in to see the comments</a>
-                </div>
-                <div class="comments-list" id="comments" style="display:none;">
-                    <p class="select-paragraph" style="float: left"><select id="languages-list" onchange="handleTranslateComments()">
-                            <option value="" selected disabled hidden>Choose the language</option>
-                            <option value = "ro">Romanian</option>
-                            <option value = "en">English</option>
-                            <option value = "zh">Chinese</option>
-                            <option value = "it">Italian</option>
-                            <option value = "de">German</option>
-                            <option value = "te">Telugu</option>
-                    </select></p>
-                    <p class="select-paragraph" style="float: right">Show <select id="comments-number" onchange="handleGetCommentsClick()">
-                            <option value = "5" selected>5</option>
-                            <option value = "10">10</option>
-                            <option value = "100">100</option>
-                            <option value = "-1">all</option>
-                    </select> comments</p>
-                    </br>
-                    <ul id="comments-container"></ul>
-                    <div class="comment-form">
-                            <textarea name="text-input" id="textarea-add-comments" onkeyup="stoppedTyping()" class="textarea" type="text"  placeholder="Leave a comment here" required></textarea></br>
-                            <input type="hidden" name="email" id="email-input" value="">
-                            <input type="submit" class="comment-submit button-property" id="submit-button" onclick="handleSendCommentClick()" value="Submit">
-                    </div>
-                </div>
-                <div class="login" id="log-out" style="display:none;">
-                    <a href="#" class="myButton" id="log-out-link">Log out</a>
-                </div>
-            </div>
+        <div id="log-in" style="display:none;">
+            <p>Here is your <a href="" id="log-in-link">Log in</a> link!</p>
         </div>
-        <footer class="footer">
-           <div class="content-footer">
-               <p>© 2020 - Paul Colța | Contact:<a href="https://contar.io/stefanut999" target="_blank" style="font-weight:bold">Contar.io</a></p>
-           </div> 
-        </footer>
-    </body>
-    <script>
-      handleFunctionsOnLoad();
-    </script>
+        <div id="log-out" style="display:none;">
+            <p id='email-text'><p>
+            <p>Here is your <a href="" id="log-out-link">Log out</a> link!</p>
+        </div>
+    </div>
+  </body>
 </html>
